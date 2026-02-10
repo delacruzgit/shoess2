@@ -94,8 +94,8 @@ class _LoginPageState extends State<LoginPage> {
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: Text("Biometrics Not Compatible"),
-            content: Text("Your device does not support biometric authentication"),
+            title: Text("Biometrics Unavailable"),
+            content: Text("Biometric authentication is not available on this device. Please ensure your device supports Face ID or fingerprint."),
             actions: [
               CupertinoDialogAction(
                 child: Text('OK'),
@@ -120,8 +120,8 @@ class _LoginPageState extends State<LoginPage> {
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: Text("Biometric Incorrect"),
-            content: Text("The biometric authentication did not match. Please try again."),
+            title: Text("Authentication Failed"),
+            content: Text("Face ID not recognized. Please try again or use your password to login."),
             actions: [
               CupertinoDialogAction(
                 child: Text('OK'),
@@ -132,22 +132,11 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     } catch (e) {
-      // Check if it's a platform exception for more specific errors
-      String errorMessage = "An error occurred during biometric authentication";
-
-      if (e.toString().contains('NotAvailable') || e.toString().contains('NotEnrolled')) {
-        errorMessage = "Biometric authentication is not set up on this device";
-      } else if (e.toString().contains('LockedOut')) {
-        errorMessage = "Too many failed attempts. Biometric authentication is temporarily locked.";
-      } else if (e.toString().contains('PermanentlyLockedOut')) {
-        errorMessage = "Biometric authentication is permanently locked due to too many failed attempts.";
-      }
-
       showCupertinoDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: Text("Biometric Error"),
-          content: Text(errorMessage),
+          title: Text("Authentication Error"),
+          content: Text("An error occurred during biometric authentication. Please try again or login with your password."),
           actions: [
             CupertinoDialogAction(
               child: Text('OK'),
@@ -190,8 +179,8 @@ class _LoginPageState extends State<LoginPage> {
           showCupertinoDialog(
             context: context,
             builder: (context) => CupertinoAlertDialog(
-              title: Text("Biometrics Not Compatible"),
-              content: Text("Your device does not support biometric authentication"),
+              title: Text("Biometrics Unavailable"),
+              content: Text("Biometric authentication is not available on this device. Please ensure your device supports Face ID or fingerprint."),
               actions: [
                 CupertinoDialogAction(
                   child: Text('OK'),
@@ -212,8 +201,8 @@ class _LoginPageState extends State<LoginPage> {
           showCupertinoDialog(
             context: context,
             builder: (context) => CupertinoAlertDialog(
-              title: Text("Biometric Incorrect"),
-              content: Text("The biometric authentication did not match. Please try again."),
+              title: Text("Authentication Failed"),
+              content: Text("Face ID or fingerprint not recognized. Authentication is required to reset data."),
               actions: [
                 CupertinoDialogAction(
                   child: Text('OK'),
@@ -225,22 +214,11 @@ class _LoginPageState extends State<LoginPage> {
           return;
         }
       } catch (e) {
-        // Check if it's a platform exception for more specific errors
-        String errorMessage = "An error occurred during biometric authentication";
-
-        if (e.toString().contains('NotAvailable') || e.toString().contains('NotEnrolled')) {
-          errorMessage = "Biometric authentication is not set up on this device";
-        } else if (e.toString().contains('LockedOut')) {
-          errorMessage = "Too many failed attempts. Biometric authentication is temporarily locked.";
-        } else if (e.toString().contains('PermanentlyLockedOut')) {
-          errorMessage = "Biometric authentication is permanently locked due to too many failed attempts.";
-        }
-
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: Text("Biometric Error"),
-            content: Text(errorMessage),
+            title: Text("Authentication Error"),
+            content: Text("An error occurred during biometric authentication. Please try again."),
             actions: [
               CupertinoDialogAction(
                 child: Text('OK'),
@@ -270,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Text('Yes'),
             onPressed: () {
               Navigator.pop(context);
+
               // Delete all data
               box.delete("username");
               box.delete("password");
@@ -281,8 +260,11 @@ class _LoginPageState extends State<LoginPage> {
               box.delete("accountCreated");
               box.put("isDark", true);
 
-              // Trigger rebuild to show signup button
-              setState(() {});
+              // Navigate to signup page
+              Navigator.pushReplacement(
+                context,
+                CupertinoPageRoute(builder: (context) => SignupPage()),
+              );
             },
           ),
         ],
