@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) => CupertinoAlertDialog(
           title: Text("Authentication Error"),
-          content: Text("An error occurred during biometric authentication. Please try again or login with your password."),
+          content: Text("Face ID not recognized. Please try again or use your password to login."),
           actions: [
             CupertinoDialogAction(
               child: Text('OK'),
@@ -218,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) => CupertinoAlertDialog(
             title: Text("Authentication Error"),
-            content: Text("An error occurred during biometric authentication. Please try again."),
+            content: Text("Face ID or fingerprint not recognized. Authentication is required to reset data."),
             actions: [
               CupertinoDialogAction(
                 child: Text('OK'),

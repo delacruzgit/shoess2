@@ -327,16 +327,7 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(height: 16),
 
             // Already have account
-            Center(
-              child: CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Text('Already have an account? Sign In'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            SizedBox(height: 40),
+
           ],
         ),
       ),
