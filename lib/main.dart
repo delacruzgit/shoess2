@@ -135,7 +135,43 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _resetData() {
+  Future<void> _resetData() async {
+    // Check if biometrics is enabled
+    bool biometricsEnabled = box.get("biometrics", defaultValue: false);
+
+    if (biometricsEnabled) {
+      // Require biometric authentication first
+      try {
+        final bool canAuthenticate = await auth.canCheckBiometrics ||
+            await auth.isDeviceSupported();
+
+        if (!canAuthenticate) {
+          setState(() {
+            errorMsg = "Biometrics not available on this device";
+          });
+          return;
+        }
+
+        final bool didAuthenticate = await auth.authenticate(
+          localizedReason: 'Authenticate to reset data',
+          biometricOnly: true,
+        );
+
+        if (!didAuthenticate) {
+          setState(() {
+            errorMsg = "Authentication failed";
+          });
+          return;
+        }
+      } catch (e) {
+        setState(() {
+          errorMsg = "Biometric error: ${e.toString()}";
+        });
+        return;
+      }
+    }
+
+    // Show confirmation dialog (only after successful auth if biometrics enabled)
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
@@ -164,7 +200,9 @@ class _LoginPageState extends State<LoginPage> {
               box.put("isDark", true);
 
               // Trigger rebuild to show signup button
-              setState(() {});
+              setState(() {
+                errorMsg = ""; // Clear any error messages
+              });
             },
           ),
         ],
